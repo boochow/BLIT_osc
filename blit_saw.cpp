@@ -6,8 +6,8 @@
 #include <math.h>
 #include "userosc.h"
 
-#define MIN_PHI 0.5f
-#define MAX_PHI 1.5f
+#define MIN_PHI 0.f
+#define MAX_PHI 1.f
 #define MIN_LEAK 0.9999f
 
 typedef struct State {
@@ -31,7 +31,7 @@ void OSC_INIT(uint32_t platform, uint32_t api)
     s_osc.phi = MIN_PHI;
     s_osc.leaky = MIN_LEAK;
     s_osc.sig = 0.f;
-    s_osc.freq_max = 24000;
+    s_osc.freq_max = k_samplerate / 2;
     s_osc.flags = k_flags_none;
 }
 
@@ -44,22 +44,23 @@ void OSC_CYCLE(const user_osc_param_t * const params,
     
     const float note = (params->pitch >> 8) + (params->pitch & 0xFF)/256.0f;
     const float w0 = osc_w0f_for_note((params->pitch) >> 8, params->pitch & 0xFF);
-    const float f = osc_notehzf(note);
-    const int n = int(s_osc.freq_max / f);
-    const int m = 2 * n + 1;
-    const int period = int(48000.f / f);
+    const float freq = osc_notehzf(note);
+    const int n_harmonics = int(s_osc.freq_max / freq);
+    const int m_for_sincm = 2 * n_harmonics + 1;
+    const int period = int(k_samplerate / freq);
     const float average = 1.f / period;
 
     float phi = (flags & k_flag_reset) ? MIN_PHI : s_osc.phi;
     float sig = (flags & k_flag_reset) ? 0.f : s_osc.sig;
     float leaky = s_osc.leaky;
-  
+
     q31_t * __restrict y = (q31_t *) yn;
     const q31_t * y_e = y + frames;
+    
     for (; y != y_e; ) {
         float sinc_d = sinf(M_PI * phi);
 
-        float phi_n = phi * m;
+        float phi_n = phi * m_for_sincm;
         phi_n -= int(phi_n) / 2 * 2;
         float sinc_n = sinf(M_PI * phi_n);
 
