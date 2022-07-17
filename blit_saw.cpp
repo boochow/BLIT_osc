@@ -15,6 +15,7 @@ typedef struct State {
     float leaky;
     float sig;
     uint16_t freq_max;
+    uint16_t harmonics_max;
     uint8_t flags;
 } State;
 
@@ -45,7 +46,7 @@ void OSC_CYCLE(const user_osc_param_t * const params,
     const float note = (params->pitch >> 8) + (params->pitch & 0xFF)/256.0f;
     const float w0 = osc_w0f_for_note((params->pitch) >> 8, params->pitch & 0xFF);
     const float freq = osc_notehzf(note);
-    const int n_harmonics = int(s_osc.freq_max / freq);
+    const int n_harmonics = clipmaxi32(int(s_osc.freq_max / freq), s_osc.harmonics_max);
     const int m_for_sincm = 2 * n_harmonics + 1;
     const int period = int(k_samplerate / freq);
     const float average = 1.f / period;
@@ -99,6 +100,13 @@ void OSC_PARAM(uint16_t index, uint16_t value)
         break;
     case k_user_osc_param_id2:
         s_osc.freq_max = 22000 - 200 * value;
+        break;
+    case k_user_osc_param_id3:
+        if (value == 0) {
+            s_osc.harmonics_max = 48000;
+        } else {
+            s_osc.harmonics_max = value;
+        }
         break;
     default:
         break;
