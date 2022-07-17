@@ -9,6 +9,7 @@
 #define MIN_PHI 0.f
 #define MAX_PHI 1.f
 #define MIN_LEAK 0.9999f
+#define MAX_VOL 1.2
 
 typedef struct State {
     float phi;
@@ -48,7 +49,7 @@ void OSC_CYCLE(const user_osc_param_t * const params,
     const float freq = osc_notehzf(note);
     const int n_harmonics = clipmaxi32(int(s_osc.freq_max / freq), s_osc.harmonics_max);
     const int m_for_sincm = 2 * n_harmonics + 1;
-    const int period = int(k_samplerate / freq / 2);
+    const int period = int(k_samplerate / freq / 2 * MAX_VOL);
     const float average = 1.f / period;
 
     float phi = (flags & k_flag_reset) ? MIN_PHI : s_osc.phi;
