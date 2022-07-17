@@ -10,3 +10,4 @@ Parameters:
 
 - Leaky: leak parameter for the leaky integrator.
 - Lowpass:  maximum frequency of upper harmonics.
+- harmonics: maximum number of harmonics (0 = all)
