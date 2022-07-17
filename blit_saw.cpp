@@ -102,7 +102,7 @@ void OSC_PARAM(uint16_t index, uint16_t value)
         s_osc.leaky = MIN_LEAK - 0.0001 * value;
         break;
     case k_user_osc_param_id2:
-        s_osc.freq_max = 22000 - 200 * value;
+        s_osc.freq_max = k_samplerate / 2 * (1.0 - 0.009 * value);
         break;
     case k_user_osc_param_id3:
         if (value == 0) {
