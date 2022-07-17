@@ -64,8 +64,8 @@ void OSC_CYCLE(const user_osc_param_t * const params,
         float sinc_n = sinf(M_PI * phi_n);
 
         float sinc_m = sinc_n / sinc_d / period;
-        if (fabs(sinc_d) < 1e-10) {
-            sinc_m = 2 * n / M_PI;
+        if (fabs(sinc_d) < 1e-30) {
+            sinc_m = 2 * n_harmonics / M_PI / period;
         }
 
         sig = sig * leaky + sinc_m - average;
