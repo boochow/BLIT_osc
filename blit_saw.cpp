@@ -30,7 +30,7 @@ static State s_osc;
 
 void OSC_INIT(uint32_t platform, uint32_t api)
 {
-    s_osc.phi = MIN_PHI;
+    s_osc.phi = 0.5;
     s_osc.leaky = MIN_LEAK;
     s_osc.sig = 0.f;
     s_osc.freq_max = k_samplerate / 2;
@@ -52,7 +52,7 @@ void OSC_CYCLE(const user_osc_param_t * const params,
     const int period = int(k_samplerate / freq / 2);
     const float average = 1.f / period;
 
-    float phi = (flags & k_flag_reset) ? MIN_PHI : s_osc.phi;
+    float phi = (flags & k_flag_reset) ? 0.5f : s_osc.phi;
     float sig = (flags & k_flag_reset) ? 0.f : s_osc.sig;
     float leaky = s_osc.leaky;
 
