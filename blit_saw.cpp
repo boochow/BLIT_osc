@@ -67,7 +67,7 @@ void OSC_CYCLE(const user_osc_param_t * const params,
         float sinc_n = sinf(M_PI * phi_n);
 
         float sinc_m;
-        if (fabs(sinc_d) < 1.e-7) {
+        if (fabs(sinc_d) < 1.e-5) {
             sinc_m = (float) m_for_sincm / period;
         } else {
             sinc_m = sinc_n / sinc_d / period;
