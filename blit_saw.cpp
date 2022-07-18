@@ -7,7 +7,7 @@
 #include "userosc.h"
 
 #define MIN_PHI 0.f
-#define MAX_PHI 1.f
+#define MAX_PHI 2.f
 #define MIN_LEAK 0.9999f
 #define MAX_VOL 0.8
 
@@ -78,7 +78,7 @@ void OSC_CYCLE(const user_osc_param_t * const params,
 
         phi += w0;
         if (phi > MAX_PHI) {
-            phi -= 1.f;
+            phi -= MAX_PHI;
         }
     }
     s_osc.phi = phi;
