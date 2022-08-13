@@ -49,7 +49,7 @@ void OSC_CYCLE(const user_osc_param_t * const params,
     const float freq = osc_notehzf(note);
     const int n_harmonics = clipmaxi32(int(s_osc.freq_max / freq), s_osc.harmonics_max);
     const int m_for_sincm = 2 * n_harmonics + 1;
-    const int period = int(k_samplerate / freq / 2);
+    const float period = 1.f * k_samplerate / freq / 2;
     const float average = 1.f / period;
 
     float phi = (flags & k_flag_reset) ? 0.5f : s_osc.phi;
