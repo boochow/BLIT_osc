@@ -48,9 +48,8 @@ void OSC_CYCLE(const user_osc_param_t * const params,
     const float w0 = osc_w0f_for_note((params->pitch) >> 8, params->pitch & 0xFF);
     const float freq = osc_notehzf(note);
     const int n_harmonics = clipmaxi32(int(s_osc.freq_max / freq), s_osc.harmonics_max);
-    const int m_for_sincm = 2 * n_harmonics + 1;
+    const int m_for_sincm = 2 * (n_harmonics / 2);
     const float period = 1.f * k_samplerate / freq / 2;
-    const float average = 1.f / period;
 
     float phi = (flags & k_flag_reset) ? 0.5f : s_osc.phi;
     float sig = (flags & k_flag_reset) ? 0.f : s_osc.sig;
@@ -69,14 +68,17 @@ void OSC_CYCLE(const user_osc_param_t * const params,
         float sinc_m;
         if (fabs(sinc_d) < 1.e-5) {
             sinc_m = (float) m_for_sincm / period;
+            if (( 0.9 < phi) && (phi < 1.1)) {
+                sinc_m = -sinc_m;
+            }
         } else {
             sinc_m = sinc_n / sinc_d / period;
         }
 
-        sig = sig * leaky + sinc_m - average;
+        sig = sig * leaky + sinc_m;
         *(y++) = f32_to_q31(sig * MAX_VOL);
 
-        phi += w0;
+        phi += w0 * 2;
         if (phi > MAX_PHI) {
             phi -= MAX_PHI;
         }

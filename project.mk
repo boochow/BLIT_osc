@@ -2,7 +2,7 @@
 # Project Customization
 # #############################################################################
 
-PROJECT = blit_saw
+PROJECT = blit_sqr
 
 UCSRC =
 
