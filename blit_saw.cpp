@@ -47,7 +47,7 @@ void OSC_CYCLE(const user_osc_param_t * const params,
     const float note = (params->pitch >> 8) + (params->pitch & 0xFF)/256.0f;
     const float w0 = osc_w0f_for_note((params->pitch) >> 8, params->pitch & 0xFF);
     const float freq = osc_notehzf(note);
-    const int n_harmonics = clipmaxi32(int(s_osc.freq_max / freq), s_osc.harmonics_max);
+    const int n_harmonics = clipmaxi32(int(s_osc.freq_max / freq), s_osc.harmonics_max) - 1;
     const int m_for_sincm = 2 * n_harmonics + 1;
     const float period = 1.f * k_samplerate / freq / 2;
     const float average = 1.f / period;
