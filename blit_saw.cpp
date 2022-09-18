@@ -26,7 +26,7 @@ enum {
 };
 
 static State s_osc;
-
+static bool sincm = false;
 
 void OSC_INIT(uint32_t platform, uint32_t api)
 {
@@ -74,7 +74,11 @@ void OSC_CYCLE(const user_osc_param_t * const params,
         }
 
         sig = sig * leaky + sinc_m - average;
-        *(y++) = f32_to_q31(sig * MAX_VOL);
+        if (sincm) {
+            *(y++) = f32_to_q31(sinc_m);
+        } else {
+            *(y++) = f32_to_q31(sig * MAX_VOL);
+        }
 
         phi += w0;
         if (phi > MAX_PHI) {
@@ -111,6 +115,12 @@ void OSC_PARAM(uint16_t index, uint16_t value)
             s_osc.harmonics_max = value;
         }
         break;
+    case k_user_osc_param_id4:
+        if (value == 0) {
+            sincm = false;
+        } else {
+            sincm = true;
+        }
     default:
         break;
   }

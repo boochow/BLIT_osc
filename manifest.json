@@ -8,11 +8,12 @@
         "prg_id" : 0,
         "version" : "1.0-0",
         "name" : "BLITsaw",
-        "num_param" : 3,
+        "num_param" : 4,
         "params" : [
             ["leaky",    0, 100, ""],
             ["lowpass",    0, 100, ""],
-            ["harmonics",    0, 100, ""]
+            ["harmonics",    0, 100, ""],
+            ["sincm",    0, 1, ""]
           ]
     }
 }
